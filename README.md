@@ -1,12 +1,11 @@
-[![Build Status](https://api.cirrus-ci.com/github/pyscaffold/pyscaffoldext-dsproject.svg?branch=master)](https://cirrus-ci.com/github/pyscaffold/pyscaffoldext-dsproject)
-[![Coveralls](https://img.shields.io/coveralls/github/pyscaffold/pyscaffoldext-dsproject/master.svg)](https://coveralls.io/r/pyscaffold/pyscaffoldext-dsproject)
-[![PyPI-Server](https://img.shields.io/pypi/v/pyscaffoldext-dsproject.svg)](https://pypi.org/project/pyscaffoldext-dsproject)
 
+# pyscaffoldext-pytorch
+## TODO
+Massive find-replace to replace all instances of dsproject to pytorch
 
-# pyscaffoldext-dsproject
-
-[PyScaffold] extension tailored for *Data Science* projects. This extension is inspired by
-[cookiecutter-data-science] and enhanced in many ways. The main differences are that it
+## Description
+[PyScaffold] extension tailored for *Pytorch Projects* projects. This extension is inspired by
+[pyscaffoldext-dsproject] and enhanced in many ways. The main differences are that it
 1. advocates a proper Python package structure that can be shipped and distributed,
 2. uses a [conda] environment instead of something [virtualenv]-based and is thus more suitable
    for data science projects,
@@ -58,13 +57,13 @@ the the documentation of [PyScaffold] for more information.
 
 ## Usage
 
-Just install this package with `pip install pyscaffoldext-dsproject`
-and note that `putup -h` shows a new option `--dsproject`.
+Just install this package with `pip install pyscaffoldext-pytorch`
+and note that `putup -h` shows a new option `--pytorch`.
 Creating a data science project is then as easy as:
 ```
-putup --dsproject my_ds_project
+putup --pytorch my_torch_project
 ```
-
+ 
 ## Note
 
 This project has been set up using PyScaffold 3.2. For details and usage

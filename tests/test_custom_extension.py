@@ -5,7 +5,7 @@ from pyscaffold.api import create_project
 from pyscaffold.cli import parse_args, process_opts
 from pyscaffold.utils import chdir
 
-EXT_FLAG = "--dsproject"
+EXT_FLAG = "--pytorch"
 FLAKE8 = "flake8 --max-line-length=88"
 
 

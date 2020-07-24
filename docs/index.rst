@@ -1,8 +1,8 @@
 =======================
-pyscaffoldext-dsproject
+pyscaffoldext-pytorch
 =======================
 
-This is the documentation of **pyscaffoldext-dsproject**.
+This is the documentation of **pyscaffoldext-pytorch**.
 
 .. note::
 

@@ -15,15 +15,16 @@ class IncludeExtensions(argparse.Action):
     """
 
     def __call__(self, parser, namespace, values, option_string=None):
+        print(parser)
         extensions = [
             NoSkeleton("no_skeleton"),
             PreCommit("pre_commit"),
-            DSProject("dsproject"),
+            PytorchProject("pytorch"),
         ]
         namespace.extensions.extend(extensions)
 
 
-class DSProject(Extension):
+class PytorchProject(Extension):
     """Template for data-science projects
     """
 
@@ -39,6 +40,7 @@ class DSProject(Extension):
             parser: current parser object
         """
         help = self.__doc__[0].lower() + self.__doc__[1:]
+        print(parser)
 
         parser.add_argument(
             self.flag, help=help, nargs=0, dest="extensions", action=IncludeExtensions
@@ -46,12 +48,36 @@ class DSProject(Extension):
         return self
 
     def activate(self, actions):
-        actions = self.register(actions, add_dsproject, after="define_structure")
-        actions = self.register(actions, replace_readme, after="add_dsproject")
+        actions = self.register(actions, add_pytorch_project, after="define_structure")
+        actions = self.register(actions, add_pytorch_structure, after="add_pytorch_project")
+        actions = self.register(actions, replace_readme, after="add_pytorch_structure")
         return actions
 
 
-def add_dsproject(struct, opts):
+def add_pytorch_structure(struct, opts):
+    """Adds basic module for custom extension
+
+    Args:
+        struct (dict): project representation as (possibly) nested
+            :obj:`dict`.
+        opts (dict): given options, see :obj:`create_project` for
+            an extensive list.
+
+    Returns:
+        struct, opts: updated project representation and options
+    """
+    if "namespace" in opts:
+        path = [opts["project"], "src", opts["namespace"], opts["package"], "lib",
+                "nn_function.py"]
+    else:
+        path = [opts["project"], "src", opts["package"], "lib",
+                "nn_function.py"]
+    train_model_py = templates.train_model_py(opts)
+    struct = helpers.ensure(struct, path, train_model_py, helpers.NO_OVERWRITE)
+    return struct, opts
+
+
+def add_pytorch_project(struct, opts):
     """Adds basic module for custom extension
 
     Args:

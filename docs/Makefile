@@ -8,7 +8,7 @@ PAPER         =
 BUILDDIR      = _build
 AUTODOCDIR    = api
 AUTODOCBUILD  = sphinx-apidoc
-PROJECT       = pyscaffoldext-dsproject
+PROJECT       = pyscaffoldext-pytorch
 MODULEDIR     = ../src/pyscaffoldext
 
 # User-friendly check for sphinx-build

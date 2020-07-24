@@ -81,7 +81,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'pyscaffoldext-dsproject'
+project = u'pyscaffoldext-pytorch'
 copyright = u'2019, Florian Wilhelm'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -151,7 +151,7 @@ html_theme_options = {
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 try:
-    from pyscaffoldext.dsproject import __version__ as version
+    from pyscaffoldext.pytorch import __version__ as version
 except ImportError:
     pass
 else:
@@ -216,7 +216,7 @@ html_static_path = ['_static']
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'dsproject-doc'
+htmlhelp_basename = 'pytorch-doc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -235,7 +235,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'user_guide.tex', u'pyscaffoldext-dsproject Documentation',
+  ('index', 'user_guide.tex', u'pyscaffoldext-pytorch Documentation',
    u'Florian Wilhelm', 'manual'),
 ]
 
