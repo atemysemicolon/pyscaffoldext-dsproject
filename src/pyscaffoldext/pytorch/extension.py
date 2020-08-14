@@ -49,9 +49,39 @@ class PytorchProject(Extension):
 
     def activate(self, actions):
         actions = self.register(actions, add_pytorch_project, after="define_structure")
-        actions = self.register(actions, add_pytorch_structure, after="add_pytorch_project")
+        actions = self.register(
+            actions, add_pytorch_structure, after="add_pytorch_project"
+        )
         actions = self.register(actions, replace_readme, after="add_pytorch_structure")
         return actions
+
+
+# TODO : Docstrings
+# TODO : Move to init
+def gen_src_file_from_template(
+    struct, opts, src_path, subpackage, base_name, extension="py", is_source=True
+):
+    model_path = src_path + [subpackage, "{}.{}".format(base_name, extension)]
+    if is_source:
+        model_py = templates.src_template(
+            opts, subpackage, "{}_{}".format(base_name, extension)
+        )
+    else:
+        model_py = templates.project_root_template(
+            opts, subpackage, "{}_{}".format(base_name, extension)
+        )
+    struct = helpers.ensure(struct, model_path, model_py, helpers.NO_OVERWRITE)
+    return struct
+
+
+# # TODO : Docstrings
+# # TODO : Move to init
+# def gen_project_file_from_template(
+#         struct, opts, src_path, subpackage, base_name, extension="py"
+# ):
+#     model_path = src_path + [subpackage, "{}.{}".format(base_name, extension)]
+#     struct = helpers.ensure(struct, model_path, model_py, helpers.NO_OVERWRITE)
+#     return struct
 
 
 def add_pytorch_structure(struct, opts):
@@ -66,14 +96,69 @@ def add_pytorch_structure(struct, opts):
     Returns:
         struct, opts: updated project representation and options
     """
-    if "namespace" in opts:
-        path = [opts["project"], "src", opts["namespace"], opts["package"], "lib",
-                "nn_function.py"]
-    else:
-        path = [opts["project"], "src", opts["package"], "lib",
-                "nn_function.py"]
-    train_model_py = templates.train_model_py(opts)
-    struct = helpers.ensure(struct, path, train_model_py, helpers.NO_OVERWRITE)
+
+    src_path = templates.get_src_folder(opts)
+
+    # Base
+    struct = gen_src_file_from_template(struct, opts, src_path, "base", "__init__")
+    struct = gen_src_file_from_template(
+        struct, opts, src_path, "base", "base_data_loader"
+    )
+    struct = gen_src_file_from_template(struct, opts, src_path, "base", "base_model")
+    struct = gen_src_file_from_template(struct, opts, src_path, "base", "base_trainer")
+
+    # Data Loader
+    struct = gen_src_file_from_template(
+        struct, opts, src_path, "data_loader", "__init__"
+    )
+    struct = gen_src_file_from_template(
+        struct, opts, src_path, "data_loader", "data_loaders"
+    )
+
+    # Logger
+    struct = gen_src_file_from_template(struct, opts, src_path, "logger", "__init__")
+    struct = gen_src_file_from_template(struct, opts, src_path, "logger", "logger")
+    struct = gen_src_file_from_template(
+        struct, opts, src_path, "logger", "visualization"
+    )
+
+    # Model
+    struct = gen_src_file_from_template(struct, opts, src_path, "model", "__init__")
+    struct = gen_src_file_from_template(struct, opts, src_path, "model", "loss")
+    struct = gen_src_file_from_template(struct, opts, src_path, "model", "metric")
+    struct = gen_src_file_from_template(struct, opts, src_path, "model", "model")
+
+    # Trainer
+    struct = gen_src_file_from_template(struct, opts, src_path, "trainer", "__init__")
+    struct = gen_src_file_from_template(struct, opts, src_path, "trainer", "trainer")
+
+    # Utils
+    struct = gen_src_file_from_template(struct, opts, src_path, "utils", "__init__")
+    struct = gen_src_file_from_template(struct, opts, src_path, "utils", "util")
+    struct = gen_src_file_from_template(struct, opts, src_path, "utils", "project")
+
+    # Config
+    struct = gen_src_file_from_template(struct, opts, src_path, "", "parse_config")
+
+    # Bin
+    struct = gen_src_file_from_template(
+        struct, opts, [opts["project"]], "bin", "train", is_source=False
+    )
+    struct = gen_src_file_from_template(
+        struct, opts, [opts["project"]], "bin", "test", is_source=False
+    )
+
+    # Config
+    struct = gen_src_file_from_template(
+        struct,
+        opts,
+        [opts["project"]],
+        "configs",
+        "logger_config",
+        extension="json",
+        is_source=False,
+    )
+
     return struct, opts
 
 
@@ -95,20 +180,14 @@ def add_pytorch_project(struct, opts):
     struct = helpers.ensure(
         struct, path, templates.gitignore_data(opts), helpers.NO_OVERWRITE
     )
-    for folder in ("external", "interim", "preprocessed", "raw"):
+    for folder in ("datasets", "sample", "output"):
         path = [opts["project"], "data", folder, ".gitignore"]
         struct = helpers.ensure(struct, path, gitignore_all, helpers.NO_OVERWRITE)
 
-    path = [opts["project"], "notebooks", "template.ipynb"]
-    template_ipynb = templates.template_ipynb(opts)
-    struct = helpers.ensure(struct, path, template_ipynb, helpers.NO_OVERWRITE)
-
-    path = [opts["project"], "scripts", "train_model.py"]
-    train_model_py = templates.train_model_py(opts)
-    struct = helpers.ensure(struct, path, train_model_py, helpers.NO_OVERWRITE)
-
-    path = [opts["project"], "models", ".gitignore"]
-    struct = helpers.ensure(struct, path, gitignore_all, helpers.NO_OVERWRITE)
+    path = [opts["project"], "weights", ".gitignore"]
+    struct = helpers.ensure(
+        struct, path, templates.gitignore_data(opts), helpers.NO_OVERWRITE
+    )
 
     path = [opts["project"], "references", ".gitignore"]
     struct = helpers.ensure(struct, path, "", helpers.NO_OVERWRITE)

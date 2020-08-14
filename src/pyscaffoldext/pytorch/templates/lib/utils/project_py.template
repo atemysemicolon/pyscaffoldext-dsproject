@@ -1,0 +1,46 @@
+from pathlib import Path
+
+import rootpath  # TODO : Add to requirements.txt
+
+
+def get_sample_data(filename):
+    """Get location of sample data"""
+    return str(
+        Path(rootpath.detect()).joinpath("data").joinpath("sample").joinpath(filename)
+    )
+
+
+def get_weights_folder(subfolder=""):
+    """Get location of models
+
+    Args:
+      subfolder(str, optional): Path of subfolder (Default value = "")
+
+    Returns:
+
+    
+    """
+    return str(Path(rootpath.detect()).joinpath("models").joinpath(subfolder))
+
+
+def get_output_folder():
+    """Get location of output folder"""
+    return str(Path(rootpath.detect()).joinpath("data").joinpath("output"))
+
+
+def get_config(filename):
+    """a) If provided with a relative path, Get location of configuration file,
+    which exists in the root level `configs` folder.
+    b) Else return absolute path as it is
+
+    Args:
+      filename(str): name of configuration file.
+
+    Returns:
+
+    
+    """
+    config_path = Path(filename)
+    if not config_path.is_absolute():
+        config_path = Path(rootpath.detect()).joinpath("configs").joinpath(filename)
+    return str(config_path)
